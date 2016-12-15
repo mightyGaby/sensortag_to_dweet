@@ -155,7 +155,7 @@
 	}
 
 	function connect()
-	{	
+	{
 		sensortag.connectToNearestDevice()
 	}
 
@@ -433,8 +433,8 @@
 
 		// Update the value displayed.
 		displayValue('GyroscopeData', string)
-		postDweet("gyroX", x.toFixed(5)); 
-		postDweet("gyroY", y.toFixed(5)); 
+		postDweet("gyroX", x.toFixed(5));
+		postDweet("gyroY", y.toFixed(5));
 		postDweet("gyroZ", z.toFixed(5));
 	}
 
@@ -496,30 +496,45 @@
 		}
 		return hex
 	}
-	
+
 	// DWEET.IO
 	function postDweet(key,value) {
 		//lets JSON encode the data before dweeting
 		// var evtdata = JSON.stringify()
+		evtdata["ambientTemp"] = 0;
+		evtdata["objectTemp"] = 0;
+		evtdata["humidity"] = 0;
+		evtdata["accelX"] = 0;
+		evtdata["accelY"] = 0;
+		evtdata["accelZ"] = 0;
+		evtdata["gyroX"] = 0;
+		evtdata["gyroY"] = 0;
+		evtdata["gyroZ"] = 0;
+		evtdata["magX"] = 0;
+		evtdata["magY"] = 0;
+		evtdata["magZ"] = 0;
+		evtdata["light"] = 0;
 
-			evtdata[key] = value;
-			setTimeout(displayValue('dweet', 'getting ' + key), 10000);
+		evtdata[key] = value;
 
-				$.ajax({
-				  type: "POST",
-				  url: 'https://dweet.io/dweet/for/gabysensortag?key=2o4CTz73ZBbrjxS5zE8tU5',
-				  data: evtdata,
-				  dataType: 'json',
-				  success: function(response){
-				  	setTimeout(displayValue('dweet', 'posted'), 5000);
-				  	console.log('success');
-				  },
-				  error: function(e) {
-				  	displayValue('dweet', 'error posting data');
-				    console.log(e);
-				  }
-				});
-				// alert('success!');
+		// setTimeout(displayValue('dweet', 'getting ' + key), 10000);
+		displayValue('dweet', 'getting data');
+
+			$.ajax({
+			  type: "POST",
+			  url: 'https://dweet.io/dweet/for/gabysensortag?key=2o4CTz73ZBbrjxS5zE8tU5',
+			  data: evtdata,
+			  dataType: 'json',
+			  success: function(response){
+			  	setTimeout(displayValue('dweet', 'posted'), 5000);
+			  	console.log('success');
+			  },
+			  error: function(e) {
+			  	displayValue('dweet', 'error posting data');
+			    console.log(e);
+			  }
+			});
+			// alert('success!');
 	}
 
 	document.addEventListener(
