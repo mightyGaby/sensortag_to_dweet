@@ -41,9 +41,6 @@
 
 	<h1>TI SensorTag CC2650 &amp; CC2541 Sensors</h1>
 
-	<img src="TISensorTagCC2650.png"
-		style="float:right;width:120px;height:auto;"/>
-
 	<p>
 		This example works with the <strong>TI SensorTag CC2650</strong>. It also works with the TI SensorTag CC2541 if you modify file index.html. Activate the SensorTag and press Connect to begin.
 	</p>
@@ -142,16 +139,15 @@
 		// as the second parameter.
 		//
 		sensortag
-			.statusCallback(statusHandler)
-			.errorCallback(errorHandler)
-			// .keypressCallback(keypressHandler)
-			.temperatureCallback(temperatureHandler, 60000)
-			.humidityCallback(humidityHandler, 60000)
-			.barometerCallback(barometerHandler, 60000)
-			.accelerometerCallback(accelerometerHandler, 60000)
-			.magnetometerCallback(magnetometerHandler, 60000)
-			.gyroscopeCallback(gyroscopeHandler, 60000)
-			.luxometerCallback(luxometerHandler, 60000);
+      .statusCallback(statusHandler)
+      .errorCallback(errorHandler)
+      .temperatureCallback(temperatureHandler, 60000)
+      .humidityCallback(humidityHandler, 60000)
+      .barometerCallback(barometerHandler, 60000)
+      .accelerometerCallback(accelerometerHandler, 60000)
+      .magnetometerCallback(magnetometerHandler, 60000)
+      .gyroscopeCallback(gyroscopeHandler, 60000)
+      .luxometerCallback(luxometerHandler, 60000)
 	}
 
 	function connect()
@@ -317,11 +313,12 @@
 
 	function accelerometerHandler(data)
 	{
+    console.log("ACCELEROMETER");
 		// Calculate the x,y,z accelerometer values from raw data.
-		var values = sensortag.getAccelerometerValues(data)
-		var x = values.x
-		var y = values.y
-		var z = values.z
+		var values = sensortag.getAccelerometerValues(data);
+		var x = values.x;
+		var y = values.y;
+		var z = values.z;
 
 		//var model = sensortag.getDeviceModel()
 		//var dataOffset = (model == 2 ? 6 : 0)
@@ -332,7 +329,7 @@
 			//	bufferToHexStr(data, dataOffset, 6) + '</span><br/>' +
 			'x: ' + (x >= 0 ? '+' : '') + x.toFixed(5) + 'G<br/>' +
 			'y: ' + (y >= 0 ? '+' : '') + y.toFixed(5) + 'G<br/>' +
-			'z: ' + (z >= 0 ? '+' : '') + z.toFixed(5) + 'G<br/>'
+			'z: ' + (z >= 0 ? '+' : '') + z.toFixed(5) + 'G<br/>';
 
 		// Update the value displayed.
 		displayValue('AccelerometerData', string);
@@ -345,14 +342,14 @@
 	function humidityHandler(data)
 	{
 		// Calculate the humidity values from raw data.
-		var values = sensortag.getHumidityValues(data)
+		var values = sensortag.getHumidityValues(data);
 
 		// Calculate the humidity temperature (C and F).
-		var tc = values.humidityTemperature
-		var tf = sensortag.celsiusToFahrenheit(tc)
+		var tc = values.humidityTemperature;
+		var tf = sensortag.celsiusToFahrenheit(tc);
 
 		// Calculate the relative humidity.
-		var h = values.relativeHumidity
+		var h = values.relativeHumidity;
 
 		// Prepare the information to display.
 		string =
@@ -360,7 +357,7 @@
 			//	bufferToHexStr(data, 0, 4) + '</span><br/>'
 			(tc >= 0 ? '+' : '') + tc.toFixed(2) + '&deg; C ' +
 			'(' + (tf >= 0 ? '+' : '') + tf.toFixed(2) + '&deg; F)' + '<br/>' +
-			(h >= 0 ? '+' : '') + h.toFixed(2) + '% RH' + '<br/>'
+			(h >= 0 ? '+' : '') + h.toFixed(2) + '% RH' + '<br/>';
 
 		// Update the value displayed.
 		displayValue('HumidityData', string);
@@ -389,9 +386,6 @@
 
 		// Update the value displayed.
 		displayValue('MagnetometerData', string);
-		// dweetData["magX"] = x;
-		// dweetData["magY"] = y;
-		// dweetData["magZ"] = z;
 		postDweet("magX", x.toFixed(5));
 		postDweet("magY", y.toFixed(5));
 		postDweet("magZ", z.toFixed(5));
@@ -422,7 +416,7 @@
 		var x = values.x
 		var y = values.y
 		var z = values.z
-
+    console.log(values)
 		// Prepare the information to display.
 		string =
 			//'raw: <span style="font-family: monospace;">0x' +
@@ -501,23 +495,9 @@
 	function postDweet(key,value) {
 		//lets JSON encode the data before dweeting
 		// var evtdata = JSON.stringify()
-		evtdata["ambientTemp"] = 0;
-		evtdata["objectTemp"] = 0;
-		evtdata["humidity"] = 0;
-		evtdata["accelX"] = 0;
-		evtdata["accelY"] = 0;
-		evtdata["accelZ"] = 0;
-		evtdata["gyroX"] = 0;
-		evtdata["gyroY"] = 0;
-		evtdata["gyroZ"] = 0;
-		evtdata["magX"] = 0;
-		evtdata["magY"] = 0;
-		evtdata["magZ"] = 0;
-		evtdata["light"] = 0;
 
 		evtdata[key] = value;
 
-		// setTimeout(displayValue('dweet', 'getting ' + key), 10000);
 		displayValue('dweet', 'getting data');
 
 			$.ajax({
@@ -526,8 +506,23 @@
 			  data: evtdata,
 			  dataType: 'json',
 			  success: function(response){
-			  	setTimeout(displayValue('dweet', 'posted'), 5000);
-			  	console.log('success');
+			  	displayValue('dweet', 'posted');
+			  	console.log(key + ' posted');
+          evtdata["ambientTemp"] = 0;
+          evtdata["sensorTemp"] = 0;
+          evtdata["humidityTemperature"] = 0;
+          evtdata["relativeHumidity"] = 0;
+          evtdata["pressure"] = 0;
+          evtdata["accelX"] = 0;
+          evtdata["accelY"] = 0;
+          evtdata["accelZ"] = 0;
+          evtdata["gyroX"] = 0;
+          evtdata["gyroY"] = 0;
+          evtdata["gyroZ"] = 0;
+          evtdata["magX"] = 0;
+          evtdata["magY"] = 0;
+          evtdata["magZ"] = 0;
+          evtdata["light"] = 0;
 			  },
 			  error: function(e) {
 			  	displayValue('dweet', 'error posting data');
