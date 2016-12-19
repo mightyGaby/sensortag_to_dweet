@@ -119,8 +119,7 @@
 	</p>
 
 	<script>
-	var sensortag,
-			evtdata = {};
+	var sensortag;
 
 	function initialiseSensorTag()
 	{
@@ -495,6 +494,7 @@
 	function postDweet(key,value) {
 		//lets JSON encode the data before dweeting
 		// var evtdata = JSON.stringify()
+    var evtdata = {};
 
 		evtdata[key] = value;
 
@@ -522,7 +522,7 @@
           evtdata["magX"] = 0;
           evtdata["magY"] = 0;
           evtdata["magZ"] = 0;
-          evtdata["light"] = 0;
+          evtdata["Light level"] = 0;
 			  },
 			  error: function(e) {
 			  	displayValue('dweet', 'error posting data');
