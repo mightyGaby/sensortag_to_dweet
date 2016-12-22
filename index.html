@@ -306,8 +306,8 @@
 
 		// dweetData["ambientTemp"] = af;
 		// dweetData["sensorTemp"] = tf;
-		postDweet("ambientTemp", ac.toFixed(5));
-		postDweet("sensorTemp", tc.toFixed(5));
+		createDweet("ambientTemp", ac.toFixed(5));
+		createDweet("sensorTemp", tc.toFixed(5));
 	}
 
 	function accelerometerHandler(data)
@@ -332,10 +332,10 @@
 		// Update the value displayed.
 		displayValue('AccelerometerData', string);
 
-		// postDweet('accelX', x.toFixed(5));
-		// postDweet('accelY', y.toFixed(5));
-		// postDweet('accelZ', z.toFixed(5));
-    postDweet('accel', [{'accelX': x.toFixed(5)},{'accelY': y.toFixed(5)},{'accelZ': z.toFixed(5)}]);
+		// createDweet('accelX', x.toFixed(5));
+		// createDweet('accelY', y.toFixed(5));
+		// createDweet('accelZ', z.toFixed(5));
+    createDweet('accel', [{'accelX': x.toFixed(5)},{'accelY': y.toFixed(5)},{'accelZ': z.toFixed(5)}]);
 	}
 
 	function humidityHandler(data)
@@ -360,8 +360,8 @@
 
 		// Update the value displayed.
 		displayValue('HumidityData', string);
-		postDweet("humidityTemperature", tf.toFixed(2));
-		postDweet("relativeHumidity", h.toFixed(2));
+		createDweet("humidityTemperature", tf.toFixed(2));
+		createDweet("relativeHumidity", h.toFixed(2));
 	}
 
 	function magnetometerHandler(data)
@@ -385,7 +385,7 @@
 
 		// Update the value displayed.
 		displayValue('MagnetometerData', string);
-    postDweet("mag",[{"magX": x.toFixed(5)},
+    createDweet("mag",[{"magX": x.toFixed(5)},
                 {"magY": y.toFixed(5)},
                 {"magZ": z.toFixed(5)}]);
 	}
@@ -405,7 +405,7 @@
 		// Update the value displayed.
 		displayValue('BarometerData', string)
 		// dweetData["pressure"] = pressure;
-		postDweet("pressure", pressure);
+		createDweet("pressure", pressure);
 	}
 
 	function gyroscopeHandler(data)
@@ -425,7 +425,7 @@
 
 		// Update the value displayed.
 		displayValue('GyroscopeData', string)
-    postDweet("gyro", [{"gyroX": x.toFixed(5)},
+    createDweet("gyro", [{"gyroX": x.toFixed(5)},
                         {"gyroY": y.toFixed(5)},
                         {"gyroZ": z.toFixed(5)}]);
 	}
@@ -442,7 +442,7 @@
 
 		// Update the value displayed.
 		displayValue('LuxometerData', string)
-		postDweet('Light level', value.toPrecision(5));
+		createDweet('Light level', value.toPrecision(5));
 
 	}
 
@@ -488,32 +488,31 @@
 		}
 		return hex
 	}
-
+  var evtdata = {};
 	// DWEET.IO
-	function postDweet(key,value) {
+	function createDweet(key,value) {
 		//lets JSON encode the data before dweeting
 		// var evtdata = JSON.stringify()
-    var evtdata = {},
-        d = new Date();
+       var d = new Date();
 
     evtdata["timestamp"] = Date.now();
     evtdata["date"] = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
     evtdata["time"] = d.getHours() + ':' + d.getMinutes();
-    evtdata["ambientTemp"] = 0;
-    evtdata["sensorTemp"] = 0;
-    evtdata["humidityTemperature"] = 0;
-    evtdata["relativeHumidity"] = 0;
-    evtdata["pressure"] = 0;
-    evtdata["accelX"] = 0;
-    evtdata["accelY"] = 0;
-    evtdata["accelZ"] = 0;
-    evtdata["gyroX"] = 0;
-    evtdata["gyroY"] = 0;
-    evtdata["gyroZ"] = 0;
-    evtdata["magX"] = 0;
-    evtdata["magY"] = 0;
-    evtdata["magZ"] = 0;
-    evtdata["Light level"] = 0;
+    // evtdata["ambientTemp"] = 0;
+    // evtdata["sensorTemp"] = 0;
+    // evtdata["humidityTemperature"] = 0;
+    // evtdata["relativeHumidity"] = 0;
+    // evtdata["pressure"] = 0;
+    // evtdata["accelX"] = 0;
+    // evtdata["accelY"] = 0;
+    // evtdata["accelZ"] = 0;
+    // evtdata["gyroX"] = 0;
+    // evtdata["gyroY"] = 0;
+    // evtdata["gyroZ"] = 0;
+    // evtdata["magX"] = 0;
+    // evtdata["magY"] = 0;
+    // evtdata["magZ"] = 0;
+    // evtdata["Light level"] = 0;
 
     if(value.length == 3){
       if(key=='accel'){
@@ -535,23 +534,32 @@
 
 
 		displayValue('dweet', 'getting data');
-
-			$.ajax({
-			  type: "POST",
-			  url: 'https://dweet.io/dweet/for/gabysensortag?key=2o4CTz73ZBbrjxS5zE8tU5',
-			  data: evtdata,
-			  dataType: 'json',
-			  success: function(response){
-			  	displayValue('dweet', 'posted');
-			  	console.log(key + ' posted');
-			  },
-			  error: function(e) {
-			  	displayValue('dweet', 'error posting data');
-			    console.log(e);
-			  }
-			});
-			alert('success!');
+    // var evtdata = JSON.stringify()
+    console.log('dataobj: ' + Object.keys(evtdata));
+    if(Object.keys(evtdata).length==18){
+      postData(evtdata);
+      evtdata = {};
+      console.log('yes')
+    }else {
+      console.log('NO');
+    }
 	}
+  function postData(evtdata){
+    $.ajax({
+      type: "POST",
+      url: 'https://dweet.io/dweet/for/gabysensortag?key=2o4CTz73ZBbrjxS5zE8tU5',
+      data: evtdata,
+      dataType: 'json',
+      success: function(response){
+        displayValue('dweet', 'posted');
+        // console.log(key + ' posted');
+      },
+      error: function(e) {
+        displayValue('dweet', 'error posting data');
+        console.log(e);
+      }
+    });
+  }
 
 	document.addEventListener(
 		'deviceready', 		function() {evothings.scriptsLoaded(initialiseSensorTag)}, false)
