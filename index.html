@@ -119,8 +119,7 @@
 	</p>
 
 	<script>
-	var sensortag,
-			evtdata = {};
+	var sensortag;
 
 	function initialiseSensorTag()
 	{
@@ -141,13 +140,13 @@
 		sensortag
       .statusCallback(statusHandler)
       .errorCallback(errorHandler)
-      .temperatureCallback(temperatureHandler, 60000)
-      .humidityCallback(humidityHandler, 60000)
-      .barometerCallback(barometerHandler, 60000)
-      .accelerometerCallback(accelerometerHandler, 60000)
-      .magnetometerCallback(magnetometerHandler, 60000)
-      .gyroscopeCallback(gyroscopeHandler, 60000)
-      .luxometerCallback(luxometerHandler, 60000)
+      .temperatureCallback(temperatureHandler, 1000)
+      .humidityCallback(humidityHandler, 1000)
+      .barometerCallback(barometerHandler, 1000)
+      .accelerometerCallback(accelerometerHandler, 500)
+      .magnetometerCallback(magnetometerHandler, 500)
+      .gyroscopeCallback(gyroscopeHandler, 500)
+      .luxometerCallback(luxometerHandler, 1000)
 	}
 
 	function connect()
@@ -495,6 +494,27 @@
 	function postDweet(key,value) {
 		//lets JSON encode the data before dweeting
 		// var evtdata = JSON.stringify()
+    var evtdata = {},
+        d = new Date();
+
+    evtdata["timestamp"] = Date.now();
+    evtdata["date"] = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
+    evtdata["time"] = d.getHours() + ':' + d.getMinutes();
+    evtdata["ambientTemp"] = 0;
+    evtdata["sensorTemp"] = 0;
+    evtdata["humidityTemperature"] = 0;
+    evtdata["relativeHumidity"] = 0;
+    evtdata["pressure"] = 0;
+    evtdata["accelX"] = 0;
+    evtdata["accelY"] = 0;
+    evtdata["accelZ"] = 0;
+    evtdata["gyroX"] = 0;
+    evtdata["gyroY"] = 0;
+    evtdata["gyroZ"] = 0;
+    evtdata["magX"] = 0;
+    evtdata["magY"] = 0;
+    evtdata["magZ"] = 0;
+    evtdata["Light level"] = 0;
 
 		evtdata[key] = value;
 
@@ -508,21 +528,6 @@
 			  success: function(response){
 			  	displayValue('dweet', 'posted');
 			  	console.log(key + ' posted');
-          evtdata["ambientTemp"] = 0;
-          evtdata["sensorTemp"] = 0;
-          evtdata["humidityTemperature"] = 0;
-          evtdata["relativeHumidity"] = 0;
-          evtdata["pressure"] = 0;
-          evtdata["accelX"] = 0;
-          evtdata["accelY"] = 0;
-          evtdata["accelZ"] = 0;
-          evtdata["gyroX"] = 0;
-          evtdata["gyroY"] = 0;
-          evtdata["gyroZ"] = 0;
-          evtdata["magX"] = 0;
-          evtdata["magY"] = 0;
-          evtdata["magZ"] = 0;
-          evtdata["light"] = 0;
 			  },
 			  error: function(e) {
 			  	displayValue('dweet', 'error posting data');
