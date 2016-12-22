@@ -534,12 +534,9 @@
 
 
 		displayValue('dweet', 'getting data');
-    // var evtdata = JSON.stringify()
-    console.log('dataobj: ' + Object.keys(evtdata));
     if(Object.keys(evtdata).length==18){
       postData(evtdata);
       evtdata = {};
-      console.log('yes')
     }else {
       console.log('NO');
     }
