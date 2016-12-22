@@ -493,6 +493,7 @@
 	function createDweet(key,value) {
 		//lets JSON encode the data before dweeting
 		// var evtdata = JSON.stringify()
+<<<<<<< HEAD
        var d = new Date();
 
     evtdata["timestamp"] = Date.now();
@@ -531,8 +532,6 @@
     } else {
 		  evtdata[key] = value;
     }
-
-
 		displayValue('dweet', 'getting data');
     if(Object.keys(evtdata).length==18){
       postData(evtdata);
@@ -541,6 +540,7 @@
       console.log('NO');
     }
 	}
+  
   function postData(evtdata){
     $.ajax({
       type: "POST",
