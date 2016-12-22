@@ -488,13 +488,10 @@
 		}
 		return hex
 	}
-  var evtdata = {};
 	// DWEET.IO
+  var evtdata = {};
 	function createDweet(key,value) {
-		//lets JSON encode the data before dweeting
-		// var evtdata = JSON.stringify()
-<<<<<<< HEAD
-       var d = new Date();
+    var d = new Date();
 
     evtdata["timestamp"] = Date.now();
     evtdata["date"] = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
@@ -535,12 +532,13 @@
 		displayValue('dweet', 'getting data');
     if(Object.keys(evtdata).length==18){
       postData(evtdata);
+      console.log(':) posted');
       evtdata = {};
     }else {
       console.log('NO');
     }
 	}
-  
+
   function postData(evtdata){
     $.ajax({
       type: "POST",
@@ -549,7 +547,6 @@
       dataType: 'json',
       success: function(response){
         displayValue('dweet', 'posted');
-        // console.log(key + ' posted');
       },
       error: function(e) {
         displayValue('dweet', 'error posting data');
