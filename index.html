@@ -312,7 +312,6 @@
 
 	function accelerometerHandler(data)
 	{
-    console.log("ACCELEROMETER");
 		// Calculate the x,y,z accelerometer values from raw data.
 		var values = sensortag.getAccelerometerValues(data);
 		var x = values.x;
@@ -333,9 +332,10 @@
 		// Update the value displayed.
 		displayValue('AccelerometerData', string);
 
-		postDweet('accelX', x.toFixed(5));
-		postDweet('accelY', y.toFixed(5));
-		postDweet('accelZ', z.toFixed(5));
+		// postDweet('accelX', x.toFixed(5));
+		// postDweet('accelY', y.toFixed(5));
+		// postDweet('accelZ', z.toFixed(5));
+    postDweet('accel', [{'accelX': x.toFixed(5)},{'accelY': y.toFixed(5)},{'accelZ': z.toFixed(5)}]);
 	}
 
 	function humidityHandler(data)
@@ -385,9 +385,9 @@
 
 		// Update the value displayed.
 		displayValue('MagnetometerData', string);
-		postDweet("magX", x.toFixed(5));
-		postDweet("magY", y.toFixed(5));
-		postDweet("magZ", z.toFixed(5));
+    postDweet("mag",[{"magX": x.toFixed(5)},
+                {"magY": y.toFixed(5)},
+                {"magZ": z.toFixed(5)}]);
 	}
 
 	function barometerHandler(data)
@@ -415,7 +415,6 @@
 		var x = values.x
 		var y = values.y
 		var z = values.z
-    console.log(values)
 		// Prepare the information to display.
 		string =
 			//'raw: <span style="font-family: monospace;">0x' +
@@ -426,9 +425,9 @@
 
 		// Update the value displayed.
 		displayValue('GyroscopeData', string)
-		postDweet("gyroX", x.toFixed(5));
-		postDweet("gyroY", y.toFixed(5));
-		postDweet("gyroZ", z.toFixed(5));
+    postDweet("gyro", [{"gyroX": x.toFixed(5)},
+                        {"gyroY": y.toFixed(5)},
+                        {"gyroZ": z.toFixed(5)}]);
 	}
 
 	function luxometerHandler(data)
@@ -516,7 +515,24 @@
     evtdata["magZ"] = 0;
     evtdata["Light level"] = 0;
 
-		evtdata[key] = value;
+    if(value.length == 3){
+      if(key=='accel'){
+        evtdata["accelX"] = value[0].accelX;
+        evtdata["accelY"] = value[1].accelY;
+        evtdata["accelZ"] = value[2].accelZ;
+      } else if(key=='gyro'){
+        evtdata["gyroX"] = value[0].gyroX;
+        evtdata["gyroY"] = value[1].gyroY;
+        evtdata["gyroZ"] = value[2].gyroZ;
+      } else  if (key=='mag'){
+        evtdata["magX"] = value[0].magX;
+        evtdata["magY"] = value[1].magY;
+        evtdata["magZ"] = value[2].magZ;
+      }
+    } else {
+		  evtdata[key] = value;
+    }
+
 
 		displayValue('dweet', 'getting data');
 
@@ -534,7 +550,7 @@
 			    console.log(e);
 			  }
 			});
-			// alert('success!');
+			alert('success!');
 	}
 
 	document.addEventListener(
