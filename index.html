@@ -494,8 +494,6 @@
     var d = new Date();
 
     evtdata["timestamp"] = Date.now();
-    evtdata["date"] = d.getMonth() + '/' + d.getDate() + '/' + d.getFullYear();
-    evtdata["time"] = d.getHours() + ':' + d.getMinutes();
     // evtdata["ambientTemp"] = 0;
     // evtdata["sensorTemp"] = 0;
     // evtdata["humidityTemperature"] = 0;
@@ -517,10 +515,12 @@
         evtdata["accelX"] = value[0].accelX;
         evtdata["accelY"] = value[1].accelY;
         evtdata["accelZ"] = value[2].accelZ;
+				console.log("accel " + Math.sqrt(Math.pow(value[0].accelX, 2), Math.pow(value[1].accelY, 2), Math.pow(value[2].accelZ, 2)));
       } else if(key=='gyro'){
         evtdata["gyroX"] = value[0].gyroX;
         evtdata["gyroY"] = value[1].gyroY;
         evtdata["gyroZ"] = value[2].gyroZ;
+				console.log("gyro " + Math.sqrt((value[0].gyroX*value[0].gyroX) + (value[1].gyroY*value[1].gyroY) + (value[2].gyroZ*value[2].gyroZ)))
       } else  if (key=='mag'){
         evtdata["magX"] = value[0].magX;
         evtdata["magY"] = value[1].magY;
@@ -530,7 +530,7 @@
 		  evtdata[key] = value;
     }
 		displayValue('dweet', 'getting data');
-    if(Object.keys(evtdata).length==18){
+    if(Object.keys(evtdata).length==16){
       postData(evtdata);
       console.log(':) posted');
       evtdata = {};
